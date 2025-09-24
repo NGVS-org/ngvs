@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGVS - Cast Your Vote</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        .vote-card {
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+            padding: 2rem;
+        }
+        .candidate-card {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            background-color: #f8fafc;
+        }
+        .candidate-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        .candidate-card.selected {
+            border: 4px solid #4f46e5;
+            box-shadow: 0 0 0 4px #c7d2fe;
+            background-color: #e0e7ff;
+        }
+        .candidate-card.selected:hover {
+            transform: translateY(0) scale(1.0);
+        }
+        .vote-btn {
+            background-color: #22c55e;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .vote-btn.active {
+            opacity: 1;
+            cursor: pointer;
+        }
+        .vote-btn.active:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center">
+
+    <div class="container vote-card text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Cast Your Vote</h1>
+        <p class="text-xl text-gray-600 mb-8">Select your polling center and candidate below.</p>
+
+        <div class="mb-8">
+            <label for="center-select" class="block text-left text-lg font-medium text-gray-700 mb-2">
+                Select Polling Center
+            </label>
+            <select id="center-select" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-indigo-500 transition-colors">
+                <option value="" disabled selected>Choose a center...</option>
+                <option value="center_A">Center A - Dhaka</option>
+                <option value="center_B">Center B - Sylhet</option>
+                <option value="center_C">Center C - Magura</option>
+                <option value="center_D">Center D - Barishal</option>
+                <option value="center_E">Center E - Sunamganj</option> 
+            </select>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-10">
+            <div id="candidate-1" data-candidate-id="candidate_1" class="candidate-card rounded-xl p-6 flex flex-col items-center">
+                <img class="w-24 h-24 rounded-full mb-4 border-2 border-transparent" src="https://placehold.co/100x100/4f46e5/ffffff?text=C1" alt="Candidate 1 Photo">
+                <h2 class="text-2xl font-bold text-gray-800 mb-1">বিএনপি</h2>
+                <p class="text-gray-500">আমাদের ভোট দিলে আমরা দেশকে আমেরিকা বানাবো!</p>
+            </div>
+
+            <div id="candidate-2" data-candidate-id="candidate_2" class="candidate-card rounded-xl p-6 flex flex-col items-center">
+                <img class="w-24 h-24 rounded-full mb-4 border-2 border-transparent" src="https://placehold.co/100x100/10b981/ffffff?text=C2" alt="Candidate 2 Photo">
+                <h2 class="text-2xl font-bold text-gray-800 mb-1">এনসিপি</h2> 
+                <p class="text-gray-500">আমরা নিতান্তই বাচ্চা, শুধু জুলাইয়ের চেতনা বুকে ধারণ করি। কিন্তু আমাদের ভোট দিলে আমরা দেশকে সিংগাপুর বানাবো।</p> 
+            </div>
+        </div>
+
+        <button id="vote-btn" class="vote-btn">
+            Submit Your Vote
+        </button>
+
+        <div id="messageBox" class="mt-8 p-4 text-center rounded-lg hidden">
+            <p id="messageContent" class="font-medium"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const centerSelect = document.getElementById('center-select');
+            const candidateCards = document.querySelectorAll('.candidate-card');
+            const voteBtn = document.getElementById('vote-btn');
+            const messageBox = document.getElementById('messageBox');
+            const messageContent = document.getElementById('messageContent');
+
+            let selectedCenter = null;
+            let selectedCandidate = null;
+
+            function showMessageBox(message, isSuccess = false) {
+                messageBox.classList.remove('hidden', 'bg-red-200', 'bg-green-200');
+                messageBox.classList.add(isSuccess ? 'bg-green-200' : 'bg-red-200');
+                messageContent.textContent = message;
+            }
+
+            function updateVoteButtonState() {
+                if (selectedCenter && selectedCandidate) {
+                    voteBtn.classList.add('active');
+                    voteBtn.disabled = false;
+                } else {
+                    voteBtn.classList.remove('active');
+                    voteBtn.disabled = true;
+                }
+            }
+
+            centerSelect.addEventListener('change', (event) => {
+                selectedCenter = event.target.value;
+                updateVoteButtonState();
+            });
+
+            candidateCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    candidateCards.forEach(c => c.classList.remove('selected'));
+                    
+                    card.classList.add('selected');
+                    selectedCandidate = card.getAttribute('data-candidate-id');
+                    updateVoteButtonState();
+                });
+            });
+
+            voteBtn.addEventListener('click', async () => {
+                if (!selectedCenter || !selectedCandidate) {
+                    showMessageBox('Please select a polling center and a candidate.');
+                    return;
+                }
+
+                const result = {
+                    success: true,
+                    message: "Click bellow for confirmation." 
+                };
+                
+
+                if (result.success) {
+                    showMessageBox(result.message, true);
+                    voteBtn.disabled = true;
+                    voteBtn.classList.remove('active');
+                    candidateCards.forEach(c => c.style.pointerEvents = 'none');
+                } else {
+                    showMessageBox(result.message);
+                }
+            });
+
+            updateVoteButtonState();
+        });
+    </script>
+    <button id="vote-btn" class="vote-btn"> 
+        <a href="verification info.html">  
+            Click here for confirmation 
+        </a>
+    </button>
+</body>
+</html>

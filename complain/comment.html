@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGVS - Verify Voter</title>
+    <!-- Load Tailwind CSS from CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            padding: 2rem;
+        }
+        .verification-card {
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+        }
+        .verify-btn {
+            background-color: #4f46e5;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .verify-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .scan-animation {
+            height: 100px;
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: scanning 2s linear infinite;
+        }
+        .scan-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(79, 70, 229, 0.3);
+            animation: scanPulse 1.5s infinite;
+        }
+        @keyframes scanning {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        @keyframes scanPulse {
+            0% { transform: scaleX(0); opacity: 0; }
+            50% { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+
+    <div class="verification-card text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Voter Verification</h1>
+        <p class="text-xl text-gray-600 mb-8">Please enter your NID and scan your biometrics to proceed.</p>
+        
+
+        <div class="p-4 mb-6 text-sm text-yellow-800 bg-yellow-200 rounded-lg">
+            <p class="font-bold">NOTE: This is for comment verification.</p>
+            <p>If you have a comment or complain against voting, please confirm before commenting.</p> 
+        </div>
+
+  
+        <div class="mb-6 text-left">
+            <label for="nid-input" class="block text-gray-700 font-bold mb-2">National ID (NID)</label>
+            <input type="text" id="nid-input" placeholder="Enter your NID" class="w-full p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-indigo-500 transition-colors">
+        </div>
+
+
+        <div class="space-y-6 mb-8">
+            <div>
+                <p class="text-lg font-bold text-gray-700 mb-2">Fingerprint Scan</p>
+                <div id="fingerprint-scan" class="scan-animation rounded-xl"></div>
+            </div>
+            <div>
+                <p class="text-lg font-bold text-gray-700 mb-2">Iris & Retina Scan</p>
+                <div id="iris-scan" class="scan-animation rounded-xl"></div>
+            </div>
+        </div>
+
+ 
+        <button id="verify-btn" class="verify-btn w-full">
+            Verify & Proceed
+        </button>
+        
+
+        <div id="messageBox" class="mt-8 p-4 text-center rounded-lg hidden">
+            <p id="messageContent" class="font-medium"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nidInput = document.getElementById('nid-input');
+            const verifyBtn = document.getElementById('verify-btn');
+            const messageBox = document.getElementById('messageBox');
+            const messageContent = document.getElementById('messageContent');
+
+  
+            function showMessageBox(message, isSuccess = false) {
+                messageBox.classList.remove('hidden', 'bg-red-200', 'bg-green-200');
+                messageBox.classList.add(isSuccess ? 'bg-green-200' : 'bg-red-200');
+                messageContent.textContent = message;
+            }
+
+            verifyBtn.addEventListener('click', async () => {
+                const nid = nidInput.value.trim();
+                if (nid === '') {
+                    showMessageBox('Please enter your NID.');
+                    return;
+                }
+
+                showMessageBox('Verifying your details...', false);
+                verifyBtn.disabled = true;
+
+                const result = await new Promise(resolve => {
+                    setTimeout(() => {
+                        if (nid) {
+                            resolve({ success: true, message: "Verification successful! Click bellow to comment" });
+                        } else {
+                            resolve({ success: false, message: "Verification failed. Invalid NID." });
+                        }
+                    }, 2000); 
+                });
+                
+ 
+
+                if (result.success) {
+                    showMessageBox(result.message, true);
+                    
+
+                    const nextPagePath = '';
+                    
+                    setTimeout(() => {
+                        if (nextPagePath) {
+                            window.location.href = nextPagePath;
+                        }
+                    }, 1000); 
+
+                } else {
+                    showMessageBox(result.message);
+                    verifyBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+     <button id="verify-btn" class="verify-btn w-full">
+        <a href="input comment.html">Click here to comment</a> 
+     </button>
+</body>
+</html>

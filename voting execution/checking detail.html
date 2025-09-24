@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGVS - Voter Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+        }
+        .details-card {
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+        }
+        .proceed-btn {
+            background-color: #22c55e;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .proceed-btn:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <!-- Details Card -->
+    <div id="detailsCard" class="details-card text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">NGVS</h1>
+        <p class="text-xl text-gray-600 mb-8">Voter Details</p>
+
+        <!-- Loading indicator -->
+        <div id="loadingMessage" class="space-y-4 mb-8 text-gray-500">
+            <svg class="animate-spin h-10 w-10 text-indigo-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p>Finding voter details from our server...</p>
+        </div>
+
+        <!-- Voter details display area -->
+        <div id="voterDetails" class="space-y-4 mb-8 hidden">
+            <div class="flex flex-col items-center space-y-4">
+                <img id="voterPhoto" class="w-24 h-24 rounded-full border-4 border-indigo-300" src="" alt="Voter Photo">
+                <div class="text-2xl font-bold text-gray-800" id="voterNameDisplay"></div>
+            </div>
+            <div class="p-4 bg-gray-100 rounded-lg text-left">
+                <p><span class="font-bold text-gray-700">Voter ID:</span> <span id="voterIdDisplay" class="text-gray-900 ml-2"></span></p>
+                <p><span class="font-bold text-gray-700">Date of Birth:</span> <span id="voterDobDisplay" class="text-gray-900 ml-2"></span></p>
+                <p><span class="font-bold text-gray-700">Address:</span> <span id="voterAddressDisplay" class="text-gray-900 ml-2"></span></p>
+            </div>
+            <p class="text-gray-500 text-sm">Please verify your details before proceeding to cast your vote.</p>
+        </div>
+
+        <button id="proceedBtn" class="proceed-btn w-full hidden">
+            Proceed to Vote
+        </button id="proceedBtn" class="proceed-btn w-full hidden">  
+        <button>
+        <a href="voting center.html">click here to vote</a> 
+        </button> 
+        <!-- Message Box for user feedback -->
+        <div id="messageBox" class="mt-8 p-4 text-center rounded-lg hidden">
+            <p id="messageContent" class="font-medium"></p>
+        </div>
+    </div>

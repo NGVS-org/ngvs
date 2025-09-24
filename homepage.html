@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>NGVS - Next Generation Voting System</title> --> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-size: cover;  
+            background-image: url('IMG-20250923-WA0001.jpg');  
+            background-color: #ffffff; 
+            color: #1e293b;
+        }
+
+        .login-btn {
+            align-items: right; 
+            background-color: #4f46e5;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .main-btn {
+            background-color: #6366f1;
+            color: #fff;
+            font-weight: 700;
+            padding: 1.5rem 2rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .main-btn:hover {
+            background-color: #4f46e5;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+    <body class="min-h-screen flex flex-col relative"> 
+
+    <!-- <header class="w-full bg-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-gray-800" >NGVS-NEXT GENERATION VOTING SYSTEM</h1> -->
+
+    <button id="loginBtn" class="login-btn absolute top-6 right-6" onclick="window.location.href='login.html'"> 
+        Login
+    </button>
+    </body> 
+    
+
+    <main class="flex-grow flex flex-col items-center justify-center p-6 text-center">
+        <div class="space-y-6">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-blue-900 leading-tight">
+                Welcome to NGVS
+            </h2>
+            <!-- <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+               Maishuzzaman 
+            </p> -->  
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-12 w-full max-w-5xl">
+            <button class="main-btn" onclick="window.location.href='voting execution/checking detail.html'">   
+                    Vote here 
+            </button>
+            <button class="main-btn" onclick="window.location.href='voting execution/checking detail.html'"> 
+                Vote here with voice
+            </button>
+            <button class="main-btn" onclick="window.location.href='complain/comment.html'">  
+                Comments or complain here 
+            </button>
+            <button class="main-btn" onclick="window.location.href='live vote.html'"> 
+                See live vote counting here 
+            </button>
+        </div>
+        <br><br> 
+    <div>
+        <p class="text-lg md:text-xl text-gray-900 max-w-2xl mx-auto">
+            Some news <br> 
+            here <br>
+            or <br> 
+            comments <br>  
+            Comments <br>  
+        </p>
+    </div>
+    </main>
+
+</html>

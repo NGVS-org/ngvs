@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGVS - Comment Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            padding: 2rem;
+        }
+        .comment-container {
+            max-width: 700px;
+            width: 100%;
+        }
+        .card {
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .submit-btn {
+            background-color: #4f46e5;
+            color: #fff;
+        }
+        .submit-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .next-btn {
+            background-color: #4f46e5;
+            color: #fff;
+        }
+        .next-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .comment-item {
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="comment-container text-center card">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Leave a complain or comments</h1> 
+        <p class="text-xl text-gray-600 mb-8">We will always help you.</p>
+        
+        <div class="mb-6">
+            <textarea id="comment-input" rows="5" class="w-full p-4 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-indigo-500 transition-colors" placeholder="Type your comment here..."></textarea>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+            <button id="submit-btn" class="btn submit-btn flex-1">
+                Submit Comment
+            </button>
+            <button id="next-page-btn" class="btn next-btn flex-1" class="main-btn" onclick="window.location.href='complain submission.html'">  
+                Next Page
+            </button>
+        </div>
+        
+        <div id="comments-list" class="mt-8 text-left">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Past Comments</h2>
+            <p id="no-comments" class="text-gray-500 italic text-center">No comments yet. Be the first to leave one!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const commentInput = document.getElementById('comment-input');
+            const submitBtn = document.getElementById('submit-btn');
+            const nextPageBtn = document.getElementById('next-page-btn');
+            const commentsList = document.getElementById('comments-list');
+            const noCommentsMessage = document.getElementById('no-comments');
+
+            submitBtn.addEventListener('click', () => {
+                const comment = commentInput.value.trim();
+                if (comment === '') {
+                    return;
+                }
+
+                if (noCommentsMessage) {
+                    noCommentsMessage.remove();
+                }
+
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-item';
+                commentDiv.textContent = comment;
+                commentsList.prepend(commentDiv); 
+
+                commentInput.value = '';
+            });
+
+            nextPageBtn.addEventListener('click', () => {
+                const nextPagePath = ''; 
+                
+                if (nextPagePath) {
+                    window.location.href = nextPagePath;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGVS - Complaint Submitted</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            padding: 2rem;
+        }
+        .success-card {
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+        .return-btn {
+            background-color: #4f46e5;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .return-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .checkmark-icon {
+            width: 120px;
+            height: 120px;
+            background-color: #22c55e;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27) both;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            80% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="success-card text-center">
+        <div class="checkmark-icon mx-auto mb-8">
+            &#10003; 
+        </div>
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Complain Submitted!</h1>
+        <p class="text-xl text-gray-600 mb-8">Thank you. Your complain has been recorded and soon action will be taken against culprits of democracy.</p>
+        
+        <button id="home-btn" class="return-btn">
+            <a href="../homepage.html">Return to Homepage</a> 
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const homeBtn = document.getElementById('home-btn');
+
+            homeBtn.addEventListener('click', () => {
+                const homepagePath = ''; 
+                
+                if (homepagePath) {
+                    window.location.href = homepagePath;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

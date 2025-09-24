@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGVS - Voter Login</title>
+    <script type="module" src="./login.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; 
+            color: #1e293b;
+        }
+        .login-card {
+            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            max-width: 420px;
+            width: 100%;
+        }
+        .login-btn {
+            background-color: #4f46e5;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-btn:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        #iris-and-retina input[type="file"] {
+            width: 100%;
+            max-width: 200px;  
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="login-card text-center">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-2">NGVS</h1>
+        <p class="text-xl text-gray-600 mb-8">Voter Login</p>
+
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <input type="text" id="MobileNumber" name="MobileNumber" placeholder="Enter Mobile number" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+                <input type="text" id="NID" name="NID" placeholder="Enter NID" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+                <input type="text" id="Name" name="Name" placeholder="Enter name" required 
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+                <input type="password" id="Password" name="Password" placeholder="Enter Password" required
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div id="iris-and-retina" style="display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+                <label for="photo">Upload Your Iris and Retina's Photo:</label>
+                <input type="file" name="photo" id="photo" style="margin-top: 5px;"> 
+            </div>
+
+            <button type="submit" class="login-btn w-full">
+                Log In
+            </button>
+        </form>
+
+        <button onclick="history.back()"> 
+            Back to homepage
+        </button>
+        
+        <div id="messageBox" class="mt-8 p-4 text-center rounded-lg hidden">
+            <p id="messageContent" class="font-medium"></p>
+        </div>
+    </div>
+    
+<script type="module">
+// login.js
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, query, where, getDocs, setDoc, doc } from "firebase/firestore";
+
+// Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyDxgjnwgy7ull9C84rA32A2eLs0NzEk4Pw",
+    authDomain: "ngvs-50d4f.firebaseapp.com",
+    projectId: "ngvs-50d4f",
+    storageBucket: "ngvs-50d4f.firebasestorage.app",
+    messagingSenderId: "354338081940",
+    appId: "1:354338081940:web:3e6bdb42c8d672a84f3881",
+    measurementId: "G-0V67647CTT"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ... rest of your JavaScript login logic
+
+    // HTML references
+    const loginForm = document.getElementById('loginForm');
+    const mobileNumberInput = document.getElementById('MobileNumber');
+    const nidInput = document.getElementById('NID');
+    const nameInput = document.getElementById('Name');
+    const passwordInput = document.getElementById('Password');
+    const messageBox = document.getElementById('messageBox');
+    const messageContent = document.getElementById('messageContent');
+    const photoInput = document.getElementById('photo');
+
+    function showMessageBox(message, isError = false) {
+        messageContent.textContent = message;
+        messageBox.style.display = 'block';
+        if (isError) {
+            messageBox.className = 'mt-8 p-4 text-center rounded-lg bg-red-100 text-red-700';
+        } else {
+            messageBox.className = 'mt-8 p-4 text-center rounded-lg bg-green-100 text-green-700';
+        }
+    }
+
+    // Handle login/registration
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const mobileNumber = mobileNumberInput.value.trim();
+        const nid = nidInput.value.trim();
+        const name = nameInput.value.trim();
+        const password = passwordInput.value.trim();
+        const photo = photoInput.files[0];
+
+        // Basic validation
+        if (!mobileNumber || !nid || !name || !password) {
+            showMessageBox("Please fill in all the required fields.", true);
+            return;
+        }
+
+        console.log("Attempting login/registration with NID:", nid);
+
+        try {
+            const votersRef = collection(db, "voters");
+            const q = query(votersRef, where("NID", "==", nid));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                // Case 1: Voter Found (Login)
+                querySnapshot.forEach((document) => {
+                    const voterData = document.data();
+                    console.log("Voter data found:", voterData);
+
+                    if (voterData.Password === password) {
+                        showMessageBox("Login successful! Redirecting...");
+                        sessionStorage.setItem("isLoggedIn", "true");
+                        sessionStorage.setItem("nid", nid);
+                        sessionStorage.setItem("name", voterData.Name);
+                        sessionStorage.setItem("mobile", voterData["MobileNumber"]);
+
+                        setTimeout(() => {
+                            window.location.href = "ngvs_home_firebase.html";
+                        }, 1500);
+                    } else {
+                        showMessageBox("Incorrect password. Please try again.", true);
+                    }
+                });
+            } else {
+                // Case 2: Voter Not Found (Registration)
+                // Note: The photo upload logic is complex and requires Firebase Storage.
+                // For simplicity, we are just storing the photo name.
+                // A production app would upload the file and store its URL.
+                const newVoterData = {
+                    MobileNumber: mobileNumber,
+                    NID: nid,
+                    Name: name,
+                    Password: password, // WARNING: Store passwords securely using Firebase Authentication
+                    PhotoName: photo ? photo.name : null
+                };
+
+                const newVoterDocRef = doc(db, "voters", nid); // Use NID as the document ID
+                await setDoc(newVoterDocRef, newVoterData);
+
+                showMessageBox("Registration successful! You are now logged in.", false);
+                sessionStorage.setItem("isLoggedIn", "true");
+                sessionStorage.setItem("nid", nid);
+                sessionStorage.setItem("name", name);
+                sessionStorage.setItem("mobile", mobileNumber);
+                
+                setTimeout(() => {
+                    window.location.href = "ngvs_home_firebase.html";
+                }, 1500);
+            }
+        } catch (error) {
+            console.error("Login/Registration error:", error);
+            showMessageBox("An error occurred. Please try again.", true);
+        }
+    });
+</script>
+</body>
+</html> 
